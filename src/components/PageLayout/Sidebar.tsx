@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "../../assets/images/the-box-cycle-logo.png";
 import Dashboard from "../../assets/images/dashboard.png";
 import Gift from "../../assets/images/gift.png";
@@ -9,32 +9,7 @@ import Setting from "../../assets/images/settings.png";
 import Logout from "../../assets/images/logout.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-const navItems = [
-  {
-    href: "/dashboard",
-    src: Dashboard,
-    label: "Dashboard",
-    alt: "Dashboard",
-    className: "w-4",
-  },
-  { href: "/gift", src: Gift, label: "Gift", alt: "Gift", className: "w-4" },
-  { href: "/map", src: Map, label: "Map", alt: "Map", className: "w-4" },
-  {
-    href: "/profile",
-    src: Profile,
-    label: "Profile",
-    alt: "Profile",
-    className: "w-4",
-  },
-  {
-    href: "/settings",
-    src: Setting,
-    label: "Settings",
-    alt: "Settings",
-    className: "w-5",
-  },
-];
+import Link from "next/link";
 
 interface SidebarProps {
     isOpen: boolean;
@@ -42,6 +17,50 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleDrawer }) => {
+  const [role,setRole] = useState(0);
+  const user = [
+    {
+      href: "/dashboard",
+      src: Dashboard,
+      label: "Dashboard",
+      alt: "Dashboard",
+      className: "w-4",
+    },
+    { href: "/gift", src: Gift, label: "Gift", alt: "Gift", className: "w-4" },
+    { href: "/map", src: Map, label: "Map", alt: "Map", className: "w-4" },
+    {
+      href: "/profile",
+      src: Profile,
+      label: "Profile",
+      alt: "Profile",
+      className: "w-4",
+    },
+    {
+      href: "/settings",
+      src: Setting,
+      label: "Settings",
+      alt: "Settings",
+      className: "w-5",
+    },
+  ];
+
+  const admin = [
+    {
+      href: "/admin/dashboard",
+      src: Dashboard,
+      label: "Dashboard",
+      alt: "Dashboard",
+      className: "w-4",
+    },
+    { href: "/admin/users", src: Gift, label: "Users", alt: "Users", className: "w-4" },
+    { href: "/admin/machines", src: Gift, label: "Machines", alt: "Machines", className: "w-4" },
+  ];
+  useEffect(()=>{
+    if(localStorage.getItem("userInfo")) {
+      const user = JSON.parse(String(localStorage.getItem("userInfo")));
+      setRole(user.roleId)
+  }
+  })
   const router = useRouter()
   const logout=()=>{
       localStorage.clear();
@@ -67,9 +86,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleDrawer }) => {
         <Image src={Logo} alt="Logo" className="w-24 2xl:w-28 mb-10" />
 
         <nav className="flex flex-col space-y-6 flex-grow relative">
-          {navItems &&
-            navItems.map((item, index) => (
-              <a
+          {role &&
+            (role===2 ? admin : user).map((item, index) => (
+              <Link
                 href={item.href}
                 key={index}
                 className="text-white flex items-center space-x-2 text-[13px]"
@@ -78,7 +97,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleDrawer }) => {
                 <span className="xl:text-[15px] 2xl:text-[16px]">
                   {item.label}
                 </span>
-              </a>
+              </Link>
             ))}
           <a
             href="#"

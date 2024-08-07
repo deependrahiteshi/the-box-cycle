@@ -88,3 +88,14 @@ export const otpVerify = async (formData:any) => {
     }
   }
 };
+
+export const axiosPost= async (endpoint:string,payload:any)=>{
+  const authToken = localStorage.getItem('token'); 
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${authToken}`,
+      'Content-Type': 'application/json' 
+    }
+  };
+  return await axios.post(endpoint, payload, config)
+}

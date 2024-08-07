@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppDispatch } from "../../store";
 import * as url from "../../../utils/urlHelper";
-import axios from "axios";
+import { axiosPost } from "@/utils/api";
 
 interface StateType {
   passwordUpdateState: {
@@ -32,7 +32,7 @@ export const { passwordUpdate } = AuthSlice.actions;
 export const updateUserPassword =
   (payload: any) => async (dispatch: AppDispatch) => {
     try {
-      const response = await axios.post(`${url.CHANGE_USER_PASSWORD}`, payload);
+      const response:any = await axiosPost(`${url.CHANGE_USER_PASSWORD}`, payload);
       // Pass only serializable parts to the action
       dispatch(
         passwordUpdate({
